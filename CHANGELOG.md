@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.1] - 2024-09-09
+
+- Correctly parse unsolicited APPEND responses
+
 ## [0.10.0] - 2024-08-30
 
 - Support optional arguments for APPEND command. [#107](https://github.com/async-email/async-imap/pull/107)
@@ -188,6 +192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.1.0 - 2019-11-11
 
+[0.10.1]: https://github.com/async-email/async-imap/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/async-email/async-imap/compare/v0.9.7...v0.10.0
 [0.9.7]: https://github.com/async-email/async-imap/compare/v0.9.6...v0.9.7
 [0.9.6]: https://github.com/async-email/async-imap/compare/v0.9.5...v0.9.6
