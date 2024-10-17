@@ -171,7 +171,7 @@ impl Flag<'static> {
     }
 }
 
-impl<'a> From<String> for Flag<'a> {
+impl From<String> for Flag<'_> {
     fn from(s: String) -> Self {
         if let Some(f) = Flag::system(&s) {
             f

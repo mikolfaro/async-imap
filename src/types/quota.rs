@@ -14,7 +14,7 @@ pub enum QuotaResourceName {
     Atom(String),
 }
 
-impl<'a> From<QuotaResourceNameRef<'a>> for QuotaResourceName {
+impl From<QuotaResourceNameRef<'_>> for QuotaResourceName {
     fn from(name: QuotaResourceNameRef<'_>) -> Self {
         match name {
             QuotaResourceNameRef::Message => QuotaResourceName::Message,
@@ -35,7 +35,7 @@ pub struct QuotaResource {
     pub limit: u64,
 }
 
-impl<'a> From<QuotaResourceRef<'a>> for QuotaResource {
+impl From<QuotaResourceRef<'_>> for QuotaResource {
     fn from(resource: QuotaResourceRef<'_>) -> Self {
         Self {
             name: resource.name.into(),
@@ -61,7 +61,7 @@ pub struct Quota {
     pub resources: Vec<QuotaResource>,
 }
 
-impl<'a> From<QuotaRef<'a>> for Quota {
+impl From<QuotaRef<'_>> for Quota {
     fn from(quota: QuotaRef<'_>) -> Self {
         Self {
             root_name: quota.root_name.to_string(),
@@ -79,7 +79,7 @@ pub struct QuotaRoot {
     pub quota_root_names: Vec<String>,
 }
 
-impl<'a> From<QuotaRootRef<'a>> for QuotaRoot {
+impl From<QuotaRootRef<'_>> for QuotaRoot {
     fn from(root: QuotaRootRef<'_>) -> Self {
         Self {
             mailbox_name: root.mailbox_name.to_string(),
