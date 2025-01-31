@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use chrono::{DateTime, FixedOffset};
 use imap_proto::types::{
     AttributeValue, BodyStructure, Envelope, MessageSection, Response, SectionPath,
@@ -226,6 +228,24 @@ impl Fetch {
                 .iter()
                 .filter_map(|av| match av {
                     AttributeValue::BodyStructure(bs) => Some(bs),
+                    _ => None,
+                })
+                .next()
+        } else {
+            unreachable!()
+        }
+    }
+
+    /// Extract the `X-GM-LABELS` of a `FETCH` response
+    ///
+    /// See [Access to Gmail labels: X-GM-LABELS](https://developers.google.com/gmail/imap/imap-extensions#access_to_labels_x-gm-labels)
+    /// for details.
+    pub fn gmail_labels(&self) -> Option<&Vec<Cow<'_, str>>> {
+        if let Response::Fetch(_, attrs) = self.response.parsed() {
+            attrs
+                .iter()
+                .filter_map(|av| match av {
+                    AttributeValue::GmailLabels(gl) => Some(gl),
                     _ => None,
                 })
                 .next()
