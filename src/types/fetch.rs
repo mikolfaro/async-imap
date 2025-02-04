@@ -36,25 +36,32 @@ pub struct Fetch {
     /// A number expressing the [RFC-7162](https://tools.ietf.org/html/rfc7162) mod-sequence
     /// of the message.
     pub modseq: Option<u64>,
+
+    /// A number expressing the [X-GM-THRID].
+    /// Only present if `X-GM-THRID` was specified in the query argument to `FETCH` and the server
+    /// supports [GMail IMAP extension](https://developers.google.com/gmail/imap/imap-extensions)
+    pub x_gmail_thread_id: Option<u64>,
 }
 
 impl Fetch {
     pub(crate) fn new(response: ResponseData) -> Self {
-        let (message, uid, size, modseq) =
+        let (message, uid, size, modseq, x_gmail_thread_id) =
             if let Response::Fetch(message, attrs) = response.parsed() {
                 let mut uid = None;
                 let mut size = None;
                 let mut modseq = None;
+                let mut x_gmail_thread_id = None;
 
                 for attr in attrs {
                     match attr {
                         AttributeValue::Uid(id) => uid = Some(*id),
                         AttributeValue::Rfc822Size(sz) => size = Some(*sz),
                         AttributeValue::ModSeq(ms) => modseq = Some(*ms),
+                        AttributeValue::GmailThrId(thr_id) => x_gmail_thread_id = Some(*thr_id),
                         _ => {}
                     }
                 }
-                (*message, uid, size, modseq)
+                (*message, uid, size, modseq, x_gmail_thread_id)
             } else {
                 unreachable!()
             };
@@ -65,6 +72,7 @@ impl Fetch {
             uid,
             size,
             modseq,
+            x_gmail_thread_id,
         }
     }
 
@@ -240,7 +248,7 @@ impl Fetch {
     ///
     /// See [Access to Gmail labels: X-GM-LABELS](https://developers.google.com/gmail/imap/imap-extensions#access_to_labels_x-gm-labels)
     /// for details.
-    pub fn gmail_labels(&self) -> Option<&Vec<Cow<'_, str>>> {
+    pub fn x_gmail_labels(&self) -> Option<&Vec<Cow<'_, str>>> {
         if let Response::Fetch(_, attrs) = self.response.parsed() {
             attrs
                 .iter()
